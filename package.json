@@ -1,5 +1,5 @@
 {
-  "name": "zeppelin-solidity-starter",
+  "name": "sample-crowdsale-starter",
   "version": "1.0.0",
   "description": "Empty sample starter truffle project for using zeppelin solidity for a crowdsale",
   "directories": {
