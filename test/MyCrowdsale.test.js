@@ -77,4 +77,15 @@ contract('MyCrowdsale', function ([owner, wallet, investor]) {
     await this.crowdsale.send(1).should.be.rejectedWith(EVMRevert);
   });
 
+  it.skip('should mint 20% of total emitted tokens for the owner wallet upon finish', async function () {
+    const totalInvestmentAmount = ether(10);
+
+    await increaseTimeTo(this.startTime);
+    await this.crowdsale.buyTokens(investor, { value: totalInvestmentAmount, from: investor });
+    await increaseTimeTo(this.endTime + 1);
+
+    await this.crowdsale.finalize();
+    (await this.token.balanceOf(wallet)).should.be.bignumber.equal(totalInvestmentAmount * 0.2);
+  });
+
 });
