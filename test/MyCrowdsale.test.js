@@ -14,7 +14,7 @@ require('chai')
 const MyCrowdsale = artifacts.require('MyCrowdsale');
 const MyToken = artifacts.require('MyToken');
 
-contract('MyCrowdsale', function ([owner, wallet, investor]) {
+contract('MyCrowdsale', function ([owner, wallet, investor, otherInvestor]) {
   const RATE = new BigNumber(10);
   const CAP = ether(20);
 
@@ -77,6 +77,21 @@ contract('MyCrowdsale', function ([owner, wallet, investor]) {
     await this.crowdsale.send(1).should.be.rejectedWith(EVMRevert);
   });
 
+  it.skip('should grant an extra 10% tokens as bonus for contributions over 5 ETH', async function () {
+    const investmentAmount = ether(1);
+    const largeInvestmentAmount = ether(10);
+    const expectedTokenAmount = RATE.mul(investmentAmount);
+    const expectedLargeTokenAmount = RATE.mul(largeInvestmentAmount).mul(1.1);
+
+    await increaseTimeTo(this.startTime);
+    await this.crowdsale.buyTokens(investor, { value: investmentAmount, from: investor }).should.be.fulfilled;
+    await this.crowdsale.buyTokens(otherInvestor, { value: largeInvestmentAmount, from: otherInvestor }).should.be.fulfilled;
+
+    (await this.token.balanceOf(investor)).should.be.bignumber.equal(expectedTokenAmount);
+    (await this.token.balanceOf(otherInvestor)).should.be.bignumber.equal(expectedLargeTokenAmount);
+    (await this.token.totalSupply()).should.be.bignumber.equal(expectedTokenAmount.add(expectedLargeTokenAmount));
+  });
+
   it.skip('should mint 20% of total emitted tokens for the owner wallet upon finish', async function () {
     const totalInvestmentAmount = ether(10);
 
@@ -87,5 +102,25 @@ contract('MyCrowdsale', function ([owner, wallet, investor]) {
     await this.crowdsale.finalize();
     (await this.token.balanceOf(wallet)).should.be.bignumber.equal(totalInvestmentAmount * 0.2);
   });
+
+  it.skip('should only allow whitelisted users to participate', async function () {
+    const investmentAmount = ether(1);
+    const expectedTokenAmount = RATE.mul(investmentAmount);
+
+    // Requires implementing a whitelist(address) public function in the MyCrowdsale contract
+    await this.crowdsale.whitelist(investor, { from: owner });
+    await increaseTimeTo(this.startTime);
+
+    await this.crowdsale.buyTokens(otherInvestor, { value: ether(1), from: otherInvestor }).should.be.rejectedWith(EVMRevert);
+    await this.crowdsale.buyTokens(investor, { value: ether(1), from: investor }).should.be.fulfilled;
+
+    const investorBalance = await this.token.balanceOf(investor);
+    investorBalance.should.be.bignumber.equal(expectedTokenAmount);
+  });
+
+  it.skip('should only allow the owner to whitelist an investor', async function () {
+    // Check out the Ownable.sol contract to see if there is a modifier that could help here
+    await this.crowdsale.whitelist(investor, { from: investor }).should.be.rejectedWith(EVMRevert);
+  })
 
 });

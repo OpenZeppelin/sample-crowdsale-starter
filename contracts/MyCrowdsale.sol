@@ -36,14 +36,16 @@ contract MyCrowdsale is CappedCrowdsale, FinalizableCrowdsale {
   }
 
   // Criteria for accepting a purchase
-  // Make sure to call super.validPurchase(), or all the criteria from parents will be overwritten
+  // Make sure to call super.validPurchase(), or all the criteria from parents will be overwritten.
   function validPurchase() internal view returns (bool) {
     return super.validPurchase();
   }
 
   // Override to execute any logic once the crowdsale finalizes
   // Requires a call to the public finalize method, only after the sale hasEnded
+  // Remember that super.finalization() calls the token finishMinting(),
+  // so no new tokens can be minted after that
   function finalization() internal {
-    return super.finalization();
+    super.finalization();
   }
 }
