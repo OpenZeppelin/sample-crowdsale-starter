@@ -1,6 +1,6 @@
 # Sample crowdsale starter project
 
-This is a sample project for getting started with a custom crowdsale contract.
+This is a sample project for getting started with a custom crowdsale contract with [OpenZeppelin](https://openzeppelin.org/).
 
 The `contracts` folder has a sample crowdsale and token, with explicit points on where to override its behaviour.
 
@@ -18,3 +18,8 @@ The `contracts` folder has a sample crowdsale and token, with explicit points on
 
 Tests are run via `npm test`. There are some pending tests waiting for you to implement the missing features, and make sure to write a test for every new feature you add!
 
+## Docs
+
+Check out the API docs for OpenZeppelin [here](https://openzeppelin.org/api/docs/open-zeppelin.html). 
+
+The Crowdsale contract [docs](https://openzeppelin.org/api/docs/crowdsale_Crowdsale.html) docs and [source](https://github.com/OpenZeppelin/zeppelin-solidity/blob/v1.6.0/contracts/crowdsale/Crowdsale.sol) may be particularly helpful in this project!
