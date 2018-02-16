@@ -98,9 +98,10 @@ contract('MyCrowdsale', function ([owner, wallet, investor, otherInvestor]) {
     await increaseTimeTo(this.startTime);
     await this.crowdsale.buyTokens(investor, { value: totalInvestmentAmount, from: investor });
     await increaseTimeTo(this.endTime + 1);
+    const totalTokenAmount = await this.token.totalSupply();
 
     await this.crowdsale.finalize();
-    (await this.token.balanceOf(wallet)).should.be.bignumber.equal(totalInvestmentAmount * 0.2);
+    (await this.token.balanceOf(wallet)).should.be.bignumber.equal(totalTokenAmount * 0.2);
   });
 
   it.skip('should only allow whitelisted users to participate', async function () {
