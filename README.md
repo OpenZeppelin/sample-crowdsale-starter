@@ -1,6 +1,6 @@
 # Sample crowdsale starter project
 
-This is a sample project for getting started with a custom crowdsale contract with [OpenZeppelin](https://openzeppelin.org/).
+This is a sample project for getting started with a custom crowdsale contract with [OpenZeppelin](https://openzeppelin.org/). It is an introductory example to learn how to use OpenZeppelin. Note that this project has not been audited and hence **is not intended for production use**.
 
 The `contracts` folder has a sample crowdsale and token, with explicit points on where to override its behaviour.
 
